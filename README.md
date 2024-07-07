@@ -72,7 +72,7 @@ We welcome contributions to this project! Please refer to the `CONTRIBUTING.md` 
 
 | Completed<br> | Function<br> | Action<br> |
 |---|---|---|
-| - [x] | login<br> | Connect to a trading account using specified parameters<br> |
+| [x] | login<br> | Connect to a trading account using specified parameters<br> |
 | version<br> | Return the MetaTrader 5 terminal version<br> |
 | account_info<br> | Get info on the current trading account<br> |
 | terminal_Info<br> | Get status and parameters of the connected MetaTrader 5 terminal<br> |
