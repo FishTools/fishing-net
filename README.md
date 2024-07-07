@@ -70,37 +70,41 @@ We welcome contributions to this project! Please refer to the `CONTRIBUTING.md` 
 
 ### MQL5 Python Functions needs to implement
 
+Note:
+- :white_check_mark: - Implemented and working
+- :x: - Not yet implemented in the server
+
 | Completed<br> | Function<br> | Action<br> |
 |---|---|---|
-| :x: | login<br> | Connect to a trading account using specified parameters<br> |
-| version<br> | Return the MetaTrader 5 terminal version<br> |
-| account_info<br> | Get info on the current trading account<br> |
-| terminal_Info<br> | Get status and parameters of the connected MetaTrader 5 terminal<br> |
-| symbols_total<br> | Get the number of all financial instruments in the MetaTrader 5 terminal<br> |
-| symbols_get<br> | Get all financial instruments from the MetaTrader 5 terminal<br> |
-| symbol_info<br> | Get data on the specified financial instrument<br> |
-| symbol_info_tick<br> | Get the last tick for the specified financial instrument<br> |
-| symbol_select<br> | Select a symbol in the MarketWatch window or remove a symbol from the window<br> |
-| market_book_add<br> | Subscribes the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
-| market_book_get<br> | Returns a tuple from BookInfo featuring Market Depth entries for the specified symbol<br> |
-| market_book_release<br> | Cancels subscription of the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
-| copy_rates_from<br> | Get bars from the MetaTrader 5 terminal starting from the specified date<br> |
-| copy_rates_from_pos<br> | Get bars from the MetaTrader 5 terminal starting from the specified index<br> |
-| copyrates_range<br> | Get bars in the specified date range from the MetaTrader 5 terminal<br> |
-| copy_ticks_from<br> | Get ticks from the MetaTrader 5 terminal starting from the specified date<br> |
-| copy_ticks_range<br> | Get ticks for the specified date range from the MetaTrader 5 terminal<br> |
-| orders_total<br> | Get the number of active orders.<br> |
-| orders_get<br> | Get active orders with the ability to filter by symbol or ticket<br> |
-| order_calc_margin<br> | Return margin in the account currency to perform a specified trading operation<br> |
-| order_calc_profit<br> | Return profit in the account currency for a specified trading operation<br> |
-| order_check<br> | Check funds sufficiency for performing a required trading operation<br> |
-| order_send<br> | Send a request to perform a trading operation.<br> |
-| positions_total<br> | Get the number of open positions<br> |
-| positions_get<br> | Get open positions with the ability to filter by symbol or ticket<br> |
-| history_orders_total<br> | Get the number of orders in trading history within the specified interval<br> |
-| history_orders_get<br> | Get orders from trading history with the ability to filter by ticket or position<br> |
-| history_deals_total<br> | Get the number of deals in trading history within the specified interval<br> |
-| history_deals_get<br> | Get deals from trading history with the ability to filter by ticket or position<br> |
+| :white_check_mark: | login<br> | Connect to a trading account using specified parameters<br> |
+| :x: | version<br> | Return the MetaTrader 5 terminal version<br> |
+| :white_check_mark: | account_info<br> | Get info on the current trading account<br> |
+| :white_check_mark: | terminal_Info<br> | Get status and parameters of the connected MetaTrader 5 terminal<br> |
+| :white_check_mark: | symbols_total<br> | Get the number of all financial instruments in the MetaTrader 5 terminal<br> |
+| :white_check_mark: | symbols_get<br> | Get all financial instruments from the MetaTrader 5 terminal<br> |
+| :white_check_mark: | symbol_info<br> | Get data on the specified financial instrument<br> |
+| :white_check_mark: | symbol_info_tick<br> | Get the last tick for the specified financial instrument<br> |
+| :x: | symbol_select<br> | Select a symbol in the MarketWatch window or remove a symbol from the window<br> |
+| :x: | market_book_add<br> | Subscribes the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
+| :x: | market_book_get<br> | Returns a tuple from BookInfo featuring Market Depth entries for the specified symbol<br> |
+| :x: | market_book_release<br> | Cancels subscription of the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
+| :white_check_mark: | copy_rates_from<br> | Get bars from the MetaTrader 5 terminal starting from the specified date<br> |
+| :white_check_mark: | copy_rates_from_pos<br> | Get bars from the MetaTrader 5 terminal starting from the specified index<br> |
+| :white_check_mark: | copyrates_range<br> | Get bars in the specified date range from the MetaTrader 5 terminal<br> |
+| :white_check_mark: | copy_ticks_from<br> | Get ticks from the MetaTrader 5 terminal starting from the specified date<br> |
+| :white_check_mark: | copy_ticks_range<br> | Get ticks for the specified date range from the MetaTrader 5 terminal<br> |
+| :x: | orders_total<br> | Get the number of active orders.<br> |
+| :x: | orders_get<br> | Get active orders with the ability to filter by symbol or ticket<br> |
+| :x: | order_calc_margin<br> | Return margin in the account currency to perform a specified trading operation<br> |
+| :x: | order_calc_profit<br> | Return profit in the account currency for a specified trading operation<br> |
+| :x: | order_check<br> | Check funds sufficiency for performing a required trading operation<br> |
+| :x: | order_send<br> | Send a request to perform a trading operation.<br> |
+| :x: | positions_total<br> | Get the number of open positions<br> |
+| :x: | positions_get<br> | Get open positions with the ability to filter by symbol or ticket<br> |
+| :x: | history_orders_total<br> | Get the number of orders in trading history within the specified interval<br> |
+| :x: | history_orders_get<br> | Get orders from trading history with the ability to filter by ticket or position<br> |
+| :x: | history_deals_total<br> | Get the number of deals in trading history within the specified interval<br> |
+| :x: | history_deals_get<br> | Get deals from trading history with the ability to filter by ticket or position<br> |
 
 
 ### Roadmap
