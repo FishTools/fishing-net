@@ -28,7 +28,19 @@ class MT5LoginCredentials(BaseModel):
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-):
+) -> MT5LoginCredentials:
+    """
+    Retrieves the current user based on the provided credentials.
+
+    Args:
+        credentials (HTTPAuthorizationCredentials): The credentials used for authentication.
+
+    Returns:
+        MT5LoginCredentials: The current user's login credentials.
+
+    Raises:
+        HTTPException: If the credentials are invalid or could not be validated.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -48,7 +60,19 @@ async def get_current_user(
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """
+    Create an access token with the provided data and expiration delta.
+
+    Args:
+        data (dict): The data to be encoded in the access token.
+        expires_delta (timedelta | None, optional): The expiration delta for the access token.
+            If not provided, a default expiration of 15 minutes will be used.
+
+    Returns:
+        str: The encoded access token.
+
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -59,7 +83,17 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-@app.post("/login")
+@app.post(
+    "/login",
+    response_model=str,
+    status_code=status.HTTP_200_OK,
+    summary="Login to the MetaTrader 5 platform.",
+    description="Login to the MetaTrader 5 platform using the provided credentials.",
+    responses={
+        200: {"description": "Successful operation"},
+        403: {"description": "Invalid Credentials"},
+    },
+)
 def login(body: MT5LoginCredentials) -> str:
     mt5.login(
         body.login,
@@ -77,7 +111,13 @@ def login(body: MT5LoginCredentials) -> str:
     return encrypted_key
 
 
-@app.get("/account")
+@app.get(
+    "/account",
+    summary="Retrieves the account information for the specified user.",
+    description="Retrieves the account information for the specified user, including the account balance, equity, margin, and other details.",
+    response_model=dict,
+    responses={200: {"description": "Successful operation"}},
+)
 def account_info(body: MT5LoginCredentials = Depends(get_current_user)) -> dict:
     mt5.login(
         body.login,
@@ -88,8 +128,29 @@ def account_info(body: MT5LoginCredentials = Depends(get_current_user)) -> dict:
     return mt5.account_info()._asdict()
 
 
-@app.get("/terminal")
+@app.get(
+    "/terminal",
+    summary="Retrieves information about the MetaTrader 5 terminal.",
+    description="Retrieves information about the MetaTrader 5 terminal, including the platform version, build number, and other details.",
+    response_model=dict,
+    responses={
+        200: {"description": "Successful operation"},
+        500: {"description": "Internal Server Error"},
+    },
+)
 def terminal_info(body: MT5LoginCredentials = Depends(get_current_user)) -> dict:
+    """
+    Retrieves information about the MetaTrader 5 terminal.
+
+    Args:
+        body (MT5LoginCredentials): The login credentials of the user.
+
+    Returns:
+        dict: A dictionary containing the terminal information.
+
+    Raises:
+        HTTPException: If there is an internal server error.
+    """
     mt5.login(
         body.login,
         password=body.password,
@@ -101,8 +162,29 @@ def terminal_info(body: MT5LoginCredentials = Depends(get_current_user)) -> dict
     return mt5.terminal_info()._asdict()
 
 
-@app.get("/total_symbols")
+@app.get(
+    "/total_symbols",
+    response_model=int,
+    summary="Retrieves the total number of symbols available in the MetaTrader 5 platform.",
+    description="Retrieves the total number of symbols available in the MetaTrader 5 platform.",
+    responses={
+        500: {"description": "Internal Server Error"},
+        200: {"description": "Successful operation"},
+    },
+)
 def symbols_total(body: MT5LoginCredentials = Depends(get_current_user)) -> int:
+    """
+    Retrieves the total number of symbols available in the MetaTrader 5 platform.
+
+    Parameters:
+    - body: MT5LoginCredentials - The login credentials of the user making the request.
+
+    Returns:
+    - int: The total number of symbols available.
+
+    Raises:
+    - HTTPException: If there is an internal server error.
+    """
     mt5.login(
         body.login,
         password=body.password,
@@ -114,7 +196,16 @@ def symbols_total(body: MT5LoginCredentials = Depends(get_current_user)) -> int:
     return mt5.symbols_total()
 
 
-@app.get("/symbols")
+@app.get(
+    "/symbols",
+    response_model=dict,
+    responses={
+        200: {"description": "Successful operation"},
+        500: {"description": "Internal Server Error"},
+    },
+    summary="Retrieves information about the specified symbol or group of symbols.",
+    description="Retrieves information about the specified symbol or group of symbols. If a symbol is provided, the information for that symbol is returned. If a group is provided, the information for all symbols in that group is returned. If no symbol or group is provided, the information for all symbols is returned.",
+)
 def symbols_get(
     body: MT5LoginCredentials = Depends(get_current_user),
     symbol: str = "",
@@ -141,12 +232,35 @@ def symbols_get(
         raise HTTPException(500, "Internal Server Error")
 
 
-@app.get("/tick")
+@app.get(
+    "/tick",
+    response_model=dict,
+    responses={
+        200: {"description": "Successful operation"},
+        500: {"description": "Internal Server Error"},
+    },
+    summary="Retrieves tick information for the specified symbol or group of symbols.",
+    description="Retrieves tick information for the specified symbol or group of symbols. If a symbol is provided, the tick information for that symbol is returned. If a group is provided, the tick information for all symbols in that group is returned. If no symbol or group is provided, the tick information for all symbols is returned.",
+)
 def symbols_tick(
     body: MT5LoginCredentials = Depends(get_current_user),
     symbol: str = "",
     group: str = "",
 ):
+    """
+    Get tick information for a symbol or a group of symbols.
+
+    Parameters:
+    - body: MT5LoginCredentials - The login credentials for the MetaTrader 5 server.
+    - symbol: str - The symbol for which to retrieve tick information. If not provided, tick information for all symbols in the specified group will be returned.
+    - group: str - The group of symbols for which to retrieve tick information. If not provided, tick information for the specified symbol will be returned.
+
+    Returns:
+    - dict or list of dict - The tick information for the specified symbol(s). If a single symbol is provided, a dictionary with the tick information is returned. If a group of symbols is provided, a list of dictionaries, each containing the tick information for a symbol, is returned.
+
+    Raises:
+    - HTTPException(500, "Internal Server Error") - If there is an internal server error while retrieving the tick information.
+    """
     mt5.login(
         body.login,
         password=body.password,
