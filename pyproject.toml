@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "Fishing Net"
+version = "0.1.0"
+description = ""
+authors = ["karlrobeck <karlalferezfx@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+metatrader5 = "^5.0.4424"
+numpy = "1.26.4"
+pyjwt = "^2.8.0"
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
