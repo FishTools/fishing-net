@@ -197,6 +197,60 @@ def symbols_total(body: MT5LoginCredentials = Depends(get_current_user)) -> int:
 
 
 @app.get(
+    "/version",
+    response_model=dict,
+    summary="Retrieves the version of the MetaTrader 5 platform.",
+    description="Retrieves the version of the MetaTrader 5 platform.",
+    responses={
+        200: {"description": "Successful operation"},
+        500: {"description": "Internal Server Error"},
+    },
+)
+def version():
+    version = mt5.version()
+
+    if not version:
+        raise HTTPException(500, "Internal Server Error")
+
+    return {
+        "terminal version": version[0],
+        "build": version[1],
+        "build date": version[2],
+    }
+
+
+@app.post(
+    "/symbol_select",
+    response_model=dict,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"description": "Successful operation"},
+        500: {"description": "Internal Server Error"},
+    },
+    summary="Enables or disables the specified symbol.",
+    description="Enables or disables the specified symbol on the MetaTrader 5 platform.",
+)
+def symbol_select(
+    symbol: str, enable: bool, body: MT5LoginCredentials = Depends(get_current_user)
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    mt5.symbol_select(symbol, enable)
+
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return {"symbol": symbol, "enabled": enable}
+
+
+@app.get(
     "/symbols",
     response_model=dict,
     responses={

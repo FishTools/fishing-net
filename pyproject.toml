@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Fishing Net"
+name = "fishing_net"
 version = "0.1.0"
 description = ""
 authors = ["karlrobeck <karlalferezfx@gmail.com>"]

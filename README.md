@@ -77,14 +77,14 @@ Note:
 | Completed<br> | Function<br> | Action<br> |
 |---|---|---|
 | :white_check_mark: | login<br> | Connect to a trading account using specified parameters<br> |
-| :x: | version<br> | Return the MetaTrader 5 terminal version<br> |
+| :white_check_mark: | version<br> | Return the MetaTrader 5 terminal version<br> |
 | :white_check_mark: | account_info<br> | Get info on the current trading account<br> |
 | :white_check_mark: | terminal_Info<br> | Get status and parameters of the connected MetaTrader 5 terminal<br> |
 | :white_check_mark: | symbols_total<br> | Get the number of all financial instruments in the MetaTrader 5 terminal<br> |
 | :white_check_mark: | symbols_get<br> | Get all financial instruments from the MetaTrader 5 terminal<br> |
 | :white_check_mark: | symbol_info<br> | Get data on the specified financial instrument<br> |
 | :white_check_mark: | symbol_info_tick<br> | Get the last tick for the specified financial instrument<br> |
-| :x: | symbol_select<br> | Select a symbol in the MarketWatch window or remove a symbol from the window<br> |
+| :white_check_mark: | symbol_select<br> | Select a symbol in the MarketWatch window or remove a symbol from the window<br> |
 | :x: | market_book_add<br> | Subscribes the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
 | :x: | market_book_get<br> | Returns a tuple from BookInfo featuring Market Depth entries for the specified symbol<br> |
 | :x: | market_book_release<br> | Cancels subscription of the MetaTrader 5 terminal to the Market Depth change events for a specified symbol<br> |
