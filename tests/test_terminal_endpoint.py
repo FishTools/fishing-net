@@ -1,0 +1,14 @@
+from fastapi.testclient import TestClient
+from fishing_net.schemas import MQLTerminalInfo
+
+
+def test_get_terminal_info(client: TestClient):
+    terminal_info = client.get("/terminal")
+    assert terminal_info.status_code == 200
+    assert terminal_info.json().keys() == MQLTerminalInfo.__annotations__.keys()
+
+
+def test_get_specific_terminal_info(client: TestClient):
+    terminal_info = client.get("/terminal/connected")
+    assert terminal_info.status_code == 200
+    assert terminal_info.json()

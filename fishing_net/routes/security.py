@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status, APIRouter
 from datetime import timedelta
-from ..utils import (
+from fishing_net.utils import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     create_access_token,
-    MT5LoginCredentials,
+    MQLLoginCredentials,
 )
 import MetaTrader5 as mt5
 
@@ -21,7 +21,7 @@ router = APIRouter(tags=["Security"])
         403: {"description": "Invalid Credentials"},
     },
 )
-def login(body: MT5LoginCredentials) -> str:
+def login(body: MQLLoginCredentials) -> str:
     if not mt5.last_error()[0]:
         raise HTTPException(403, f"Invalid Credentials {mt5.last_error()}")
 

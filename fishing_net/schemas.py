@@ -53,6 +53,9 @@ class MQLTerminalInfo(BaseModel):
     company: str
     name: str
     language: str
+    path: str
+    data_path: str
+    commondata_path: str
 
 
 class MQLSymbolInfo(BaseModel):
@@ -214,6 +217,13 @@ class MQLTradeRequest(BaseModel):
     comment: str
     position: int
     position_by: int
+
+
+class MQLLoginCredentials(BaseModel):
+    login: int
+    password: str | None = None
+    server: str | None = None
+    timeout: int | None = None
 
 
 class MQLPosition(BaseModel):

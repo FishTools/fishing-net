@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
 from datetime import datetime
 from fishing_net.schemas import MQLHistoryOrder, MQLHistoryDeal

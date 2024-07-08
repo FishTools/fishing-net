@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
+from fishing_net.schemas import MQLLoginCredentials
 from datetime import datetime, timedelta, timezone
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -11,20 +11,12 @@ SECRET_KEY = "sample data"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 bearer_scheme = HTTPBearer()
-
-
-class MT5LoginCredentials(BaseModel):
-    login: int
-    password: str | None = None
-    server: str | None = None
-    timeout: int | None = None
 
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-) -> MT5LoginCredentials:
+) -> MQLLoginCredentials:
     """
     Retrieves the current user based on the provided credentials.
 
@@ -44,15 +36,19 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(
-            credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM]
+            jwt=credentials.credentials, key=SECRET_KEY, algorithms=[ALGORITHM]
         )
-        if payload.exp < datetime.now(timezone.utc):
+        if (
+            datetime.fromtimestamp(payload["exp"]).timestamp()
+            < datetime.now(timezone.utc).timestamp()
+        ):
             raise credentials_exception
         if not payload:
             raise credentials_exception
-    except InvalidTokenError:
+    except InvalidTokenError as e:
+        print(e)
         raise credentials_exception
-    user = MT5LoginCredentials(**payload)
+    user = MQLLoginCredentials(**payload)
     if user is None:
         raise credentials_exception
     mt5.login(
