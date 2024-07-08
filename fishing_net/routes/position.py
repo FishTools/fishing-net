@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
 
 router = APIRouter(tags=["Position"])
 
 
-@router.get("/total")
-def total_positions(body: MT5LoginCredentials = Depends(get_current_user)):
+@router.get("/total", dependencies=[Depends(get_current_user)])
+def total_positions():
     total = mt5.positions_total()
 
     if not mt5.last_error()[0]:
@@ -15,13 +15,8 @@ def total_positions(body: MT5LoginCredentials = Depends(get_current_user)):
     return total
 
 
-@router.get("/info")
-def positions_get(
-    symbol: str = "",
-    group: str = "",
-    ticket: int = 0,
-    body: MT5LoginCredentials = Depends(get_current_user),
-):
+@router.get("/info", dependencies=[Depends(get_current_user)])
+def positions_get(symbol: str = "", group: str = "", ticket: int = 0):
     if all([symbol, group, ticket]):
         raise HTTPException(500, "Internal Server Error")
 

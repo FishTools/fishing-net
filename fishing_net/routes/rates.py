@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
 from datetime import datetime
 
 router = APIRouter(tags=["Rates"])
 
 
-@router.get("/{symbol}")
+@router.get("/{symbol}", dependencies=[Depends(get_current_user)])
 def copy_rates(
     symbol: str,
     timeframe: str,
@@ -14,7 +14,6 @@ def copy_rates(
     date_to: datetime | None = None,
     start_pos: int = 0,
     count: int = 0,
-    _body: MT5LoginCredentials = Depends(get_current_user),
 ):
     if all([date_from, date_to, count, start_pos]):
         raise HTTPException(500, "Internal Server Error")

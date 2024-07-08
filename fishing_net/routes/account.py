@@ -1,32 +1,18 @@
 from fastapi import APIRouter, Depends
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 from fishing_net.schemas import MQLAccountInfo
 import MetaTrader5 as mt5
 
 router = APIRouter(tags=["Account"])
 
 
-@router.get("/")
-def account_information(
-    body: MT5LoginCredentials = Depends(get_current_user),
-) -> MQLAccountInfo:
-    mt5.login(
-        body.login,
-        password=body.password,
-        server=body.server,
-        timeout=body.timeout,
-    )
+@router.get("/", dependencies=[Depends(get_current_user)])
+def account_information() -> MQLAccountInfo:
     return MQLAccountInfo(**mt5.account_info()._asdict())
 
 
-@router.get("/{property}")
+@router.get("/{property}", dependencies=[Depends(get_current_user)])
 def specific_account_property(
-    property: str, body: MT5LoginCredentials = Depends(get_current_user)
+    property: str,
 ) -> float | int | str | bool:
-    mt5.login(
-        body.login,
-        password=body.password,
-        server=body.server,
-        timeout=body.timeout,
-    )
     return getattr(MQLAccountInfo(**mt5.account_info()._asdict()), property)

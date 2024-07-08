@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
 from fishing_net.schemas import MQLOrder, MQLTradeRequest
 
@@ -44,20 +44,13 @@ def orders_get(
         return MQLOrder(**orders)
 
 
-@router.get("/check/margin")
+@router.get("/check/margin", dependencies=[Depends(get_current_user)])
 def order_calc_margin(
     action: str,
     symbol: str,
     volume: float,
     price: float,
-    body: MT5LoginCredentials = Depends(get_current_user),
 ):
-    mt5.login(
-        body.login,
-        password=body.password,
-        server=body.server,
-        timeout=body.timeout,
-    )
     margin = mt5.order_calc_margin(getattr(mt5, action.upper()), symbol, volume, price)
 
     if not mt5.last_error()[0]:
@@ -66,21 +59,14 @@ def order_calc_margin(
     return margin
 
 
-@router.get("/check/profit")
+@router.get("/check/profit", dependencies=[Depends(get_current_user)])
 def order_calc_profit(
     action: str,
     symbol: str,
     volume: float,
     price_open: float,
     price_close: float,
-    body: MT5LoginCredentials = Depends(get_current_user),
 ):
-    mt5.login(
-        body.login,
-        password=body.password,
-        server=body.server,
-        timeout=body.timeout,
-    )
     profit = mt5.order_calc_profit(
         getattr(mt5, action.upper()), symbol, volume, price_open, price_close
     )
@@ -91,17 +77,10 @@ def order_calc_profit(
     return profit
 
 
-@router.post("/check")
+@router.post("/check", dependencies=[Depends(get_current_user)])
 def order_check(
     order_req: MQLTradeRequest,
-    body: MT5LoginCredentials = Depends(get_current_user),
 ):
-    mt5.login(
-        body.login,
-        password=body.password,
-        server=body.server,
-        timeout=body.timeout,
-    )
     result = mt5.order_check(order_req.model_dump())
     if not mt5.last_error()[0]:
         raise HTTPException(500, "Internal Server Error")

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
-from fishing_net.utils import get_current_user, MT5LoginCredentials
+from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
 
 router = APIRouter(tags=["Symbol"])
 
 
-@router.get("/total")
-def total_symbols(body: MT5LoginCredentials = Depends(get_current_user)):
+@router.get("/total", dependencies=[Depends(get_current_user)])
+def total_symbols():
     total = mt5.symbols_total()
 
     if not mt5.last_error()[0]:
@@ -15,9 +15,10 @@ def total_symbols(body: MT5LoginCredentials = Depends(get_current_user)):
     return total
 
 
-@router.put("/select")
+@router.put("/select", dependencies=[Depends(get_current_user)])
 def select_symbol(
-    symbol: str, enable: bool, _body: MT5LoginCredentials = Depends(get_current_user)
+    symbol: str,
+    enable: bool,
 ):
     enabled_symbol = mt5.symbol_select(symbol, enable)
 
@@ -27,9 +28,8 @@ def select_symbol(
     return {"symbol": symbol, "enabled": enabled_symbol}
 
 
-@router.get("/info")
+@router.get("/info", dependencies=[Depends(get_current_user)])
 def symbols_info(
-    _body: MT5LoginCredentials = Depends(get_current_user),
     symbol: str = "",
     group: str = "",
     all: bool = False,
