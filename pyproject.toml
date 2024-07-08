@@ -12,6 +12,7 @@ metatrader5 = "^5.0.4424"
 numpy = "1.26.4"
 pyjwt = "^2.8.0"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+pandas = "^2.2.2"
 
 
 [tool.poetry.group.dev.dependencies]

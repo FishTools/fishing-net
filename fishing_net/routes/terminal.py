@@ -22,9 +22,9 @@ def terminal_version():
         raise HTTPException(500, "Internal Server Error")
 
     return {
-        "terminal version": version[0],
+        "terminal_version": version[0],
         "build": version[1],
-        "build date": version[2],
+        "build_date": version[2],
     }
 
 

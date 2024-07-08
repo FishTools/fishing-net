@@ -168,7 +168,7 @@ class MQLSymbolTick(BaseModel):
     volume_real: int
 
 
-class MQLRates(BaseModel):
+class MQLSymbolRates(BaseModel):
     time: int
     open: float
     high: float
