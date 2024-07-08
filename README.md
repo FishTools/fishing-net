@@ -93,14 +93,14 @@ Note:
 | :white_check_mark: | copyrates_range<br> | Get bars in the specified date range from the MetaTrader 5 terminal<br> |
 | :white_check_mark: | copy_ticks_from<br> | Get ticks from the MetaTrader 5 terminal starting from the specified date<br> |
 | :white_check_mark: | copy_ticks_range<br> | Get ticks for the specified date range from the MetaTrader 5 terminal<br> |
-| :x: | orders_total<br> | Get the number of active orders.<br> |
-| :x: | orders_get<br> | Get active orders with the ability to filter by symbol or ticket<br> |
+| :white_check_mark: | orders_total<br> | Get the number of active orders.<br> |
+| :white_check_mark: | orders_get<br> | Get active orders with the ability to filter by symbol or ticket<br> |
 | :x: | order_calc_margin<br> | Return margin in the account currency to perform a specified trading operation<br> |
 | :x: | order_calc_profit<br> | Return profit in the account currency for a specified trading operation<br> |
 | :x: | order_check<br> | Check funds sufficiency for performing a required trading operation<br> |
 | :x: | order_send<br> | Send a request to perform a trading operation.<br> |
-| :x: | positions_total<br> | Get the number of open positions<br> |
-| :x: | positions_get<br> | Get open positions with the ability to filter by symbol or ticket<br> |
+| :white_check_mark: | positions_total<br> | Get the number of open positions<br> |
+| :white_check_mark: | positions_get<br> | Get open positions with the ability to filter by symbol or ticket<br> |
 | :x: | history_orders_total<br> | Get the number of orders in trading history within the specified interval<br> |
 | :x: | history_orders_get<br> | Get orders from trading history with the ability to filter by ticket or position<br> |
 | :x: | history_deals_total<br> | Get the number of deals in trading history within the specified interval<br> |
