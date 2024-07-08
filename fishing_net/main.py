@@ -3,7 +3,7 @@ import time
 from fastapi import FastAPI, HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import MetaTrader5 as mt5
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 import jwt
 from passlib.context import CryptContext
 from jwt.exceptions import InvalidTokenError
@@ -421,3 +421,198 @@ def positions_get(
     positions = [p._asdict() for p in positions]
 
     return positions
+
+
+@app.get("/order_calc_margin")
+def order_calc_margin(
+    action: str,
+    symbol: str,
+    volume: float,
+    price: float,
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    margin = mt5.order_calc_margin(getattr(mt5, action.upper()), symbol, volume, price)
+
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return margin
+
+
+@app.get("/order_calc_profit")
+def order_calc_profit(
+    action: str,
+    symbol: str,
+    volume: float,
+    price_open: float,
+    price_close: float,
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    profit = mt5.order_calc_profit(
+        getattr(mt5, action.upper()), symbol, volume, price_open, price_close
+    )
+
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return profit
+
+
+class MQLTradeRequest(BaseModel):
+    action: str
+    magic: int
+    order: int
+    symbol: str
+    volume: float
+    price: float
+    stoplimit: float
+    sl: float
+    tp: float
+    deviation: int
+    type: int
+    type_filling: int
+    type_time: int
+    expiration: int
+    comment: str
+    position: int
+    position_by: int
+
+    @field_serializer("action", when_used="json")
+    def serialize_action(self, value):
+        return getattr(mt5, value.upper())
+
+    @field_serializer("type", when_used="json")
+    def serialize_type(self, value):
+        return getattr(mt5, value.upper())
+
+    @field_serializer("type_filling", when_used="json")
+    def serialize_type_filling(self, value):
+        return getattr(mt5, value.upper())
+
+    @field_serializer("type_time", when_used="json")
+    def serialize_type_time(self, value):
+        return getattr(mt5, value.upper())
+
+
+@app.post("/order_check")
+def order_check(
+    order_req: MQLTradeRequest,
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    result = mt5.order_check(order_req.model_dump())
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return result
+
+
+@app.post("/history_orders_total")
+def history_orders_total(
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    return mt5.history_orders_total()
+
+
+@app.post("/history_orders_get")
+def history_orders_get(
+    date_from: datetime | None = None,
+    date_to: datetime | None = None,
+    group: str = "",
+    ticket: int = 0,
+    position: int = 0,
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    if all([date_from, date_to, position, group, ticket]):
+        raise HTTPException(500, "Internal Server Error")
+
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+
+    if date_from and date_to and group:
+        history_orders = mt5.history_orders_get(date_from, date_to, group=group)
+    elif ticket:
+        history_orders = mt5.history_orders_get(ticket=ticket)
+    elif position:
+        history_orders = mt5.history_orders_get(position=position)
+    else:
+        raise HTTPException(500, "Internal Server Error")
+
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return history_orders
+
+
+@app.post("/history_deals_total")
+def history_deals_total(
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+    return mt5.history_deals_total()
+
+
+@app.post("/history_deals_get")
+def history_deals_get(
+    date_from: datetime | None = None,
+    date_to: datetime | None = None,
+    group: str = "",
+    ticket: int = 0,
+    position: int = 0,
+    body: MT5LoginCredentials = Depends(get_current_user),
+):
+    if all([date_from, date_to, position, group, ticket]):
+        raise HTTPException(500, "Internal Server Error")
+
+    mt5.login(
+        body.login,
+        password=body.password,
+        server=body.server,
+        timeout=body.timeout,
+    )
+
+    if date_from and date_to and group:
+        history_deals = mt5.history_deals_get(date_from, date_to, group=group)
+    elif ticket:
+        history_deals = mt5.history_deals_get(ticket=ticket)
+    elif position:
+        history_deals = mt5.history_deals_get(position=position)
+    else:
+        raise HTTPException(500, "Internal Server Error")
+
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+
+    return history_deals
