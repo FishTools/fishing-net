@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fishing_net.utils import get_current_user, MT5LoginCredentials
 import MetaTrader5 as mt5
 from datetime import datetime
+from fishing_net.schemas import MQLHistoryOrder, MQLHistoryDeal
 
 router = APIRouter(tags=["History"])
 
@@ -9,7 +10,7 @@ router = APIRouter(tags=["History"])
 @router.get("/orders/total")
 def history_orders_total(
     body: MT5LoginCredentials = Depends(get_current_user),
-):
+) -> int:
     mt5.login(
         body.login,
         password=body.password,
@@ -27,7 +28,7 @@ def history_orders_get(
     ticket: int = 0,
     position: int = 0,
     body: MT5LoginCredentials = Depends(get_current_user),
-):
+) -> MQLHistoryOrder:
     if all([date_from, date_to, position, group, ticket]):
         raise HTTPException(500, "Internal Server Error")
 
@@ -50,13 +51,13 @@ def history_orders_get(
     if not mt5.last_error()[0]:
         raise HTTPException(500, "Internal Server Error")
 
-    return history_orders
+    return MQLHistoryOrder(**history_orders)
 
 
 @router.get("/deals/total")
 def history_deals_total(
     body: MT5LoginCredentials = Depends(get_current_user),
-):
+) -> int:
     mt5.login(
         body.login,
         password=body.password,
@@ -74,7 +75,7 @@ def history_deals_get(
     ticket: int = 0,
     position: int = 0,
     body: MT5LoginCredentials = Depends(get_current_user),
-):
+) -> MQLHistoryDeal:
     if all([date_from, date_to, position, group, ticket]):
         raise HTTPException(500, "Internal Server Error")
 
@@ -97,4 +98,4 @@ def history_deals_get(
     if not mt5.last_error()[0]:
         raise HTTPException(500, "Internal Server Error")
 
-    return history_deals
+    return MQLHistoryDeal(**history_deals)
