@@ -200,23 +200,48 @@ class MQLOrder(BaseModel):
 
 
 class MQLTradeRequest(BaseModel):
-    action: str
-    magic: int
-    order: int
+    action: int
+    magic: Optional[int] = None
+    order: Optional[int] = None
     symbol: str
     volume: float
     price: float
-    stoplimit: float
-    sl: float
-    tp: float
-    deviation: int
+    stoplimit: Optional[float] = None
+    sl: Optional[float] = None
+    tp: Optional[float] = None
+    deviation: Optional[int] = None
     type: int
     type_filling: int
     type_time: int
-    expiration: int
+    expiration: Optional[int] = None
+    comment: Optional[str] = None
+    position: Optional[int] = None
+    position_by: Optional[int] = None
+
+
+class MQLTradeResult(BaseModel):
+    retcode: int
+    deal: int
+    order: int
+    volume: float
+    price: float
+    bid: float
+    ask: float
     comment: str
-    position: int
-    position_by: int
+    request_id: int
+    retcode_external: int
+
+
+class MQLTradeCheckResult(BaseModel):
+    retcode: int
+    balance: float
+    equity: float
+    profit: float
+    margin: float
+    margin_free: float
+    margin_level: float
+    comment: Optional[str] = None
+    request: MQLTradeRequest
 
 
 class MQLLoginCredentials(BaseModel):

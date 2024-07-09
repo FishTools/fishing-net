@@ -9,6 +9,11 @@ Fishing Net acts as a bridge between your applications and the MQL5 Terminal, a 
 
 Through this API, you can send commands, retrieve data, and manage your MQL5 applications directly from your Python code or Programming language of your choice.
 
+### Runs on Any Computer (But MQL5 Needs Windows)
+
+This program works on your computer, no matter Windows, Mac, or Linux, as long as you have Python. However, to connect to the MQL5 program (it only runs on Windows), you'll need a separate Windows machine. Once connected, Fishing Net uses regular web stuff (HTTP) to talk to MQL5, so you can use any coding language you like.
+
+
 
 ### Installation
 
@@ -97,8 +102,8 @@ Note:
 | :white_check_mark: | orders_get<br> | Get active orders with the ability to filter by symbol or ticket<br> |
 | :white_check_mark: | order_calc_margin<br> | Return margin in the account currency to perform a specified trading operation<br> |
 | :white_check_mark: | order_calc_profit<br> | Return profit in the account currency for a specified trading operation<br> |
-| :x: | order_check<br> | Check funds sufficiency for performing a required trading operation<br> |
-| :x: | order_send<br> | Send a request to perform a trading operation.<br> |
+| :white_check_mark: | order_check<br> | Check funds sufficiency for performing a required trading operation<br> |
+| :white_check_mark: | order_send<br> | Send a request to perform a trading operation.<br> |
 | :white_check_mark: | positions_total<br> | Get the number of open positions<br> |
 | :white_check_mark: | positions_get<br> | Get open positions with the ability to filter by symbol or ticket<br> |
 | :white_check_mark: | history_orders_total<br> | Get the number of orders in trading history within the specified interval<br> |

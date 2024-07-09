@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fishing_net.utils import get_current_user
 import MetaTrader5 as mt5
-from fishing_net.schemas import MQLOrder, MQLTradeRequest
+from fishing_net.schemas import (
+    MQLOrder,
+    MQLTradeRequest,
+    MQLTradeResult,
+    MQLTradeCheckResult,
+)
 
 
 router = APIRouter(tags=["Orders"])
@@ -81,8 +86,23 @@ def order_calc_profit(
 def order_check(
     order_req: MQLTradeRequest,
 ):
-    result = mt5.order_check(order_req.model_dump())
+    result = mt5.order_check(order_req.model_dump(exclude_none=True))
+    if not mt5.last_error()[0]:
+        raise HTTPException(500, "Internal Server Error")
+    result = result._asdict()
+    request = result.pop("request")
+    return MQLTradeCheckResult(
+        request=request._asdict(),
+        **result,
+    )
+
+
+@router.post("/send", dependencies=[Depends(get_current_user)])
+def order_send(
+    order_req: MQLTradeRequest,
+) -> MQLTradeResult:
+    result = mt5.order_send(order_req.model_dump(exclude_none=True))
     if not mt5.last_error()[0]:
         raise HTTPException(500, "Internal Server Error")
 
-    return result
+    return result._asdict()
